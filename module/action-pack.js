@@ -1,4 +1,5 @@
 import { calculateUsesForItem } from "./item-uses.js";
+import { settings } from "../../itemacro/scripts/settings.js"
 
 let lastKnownActiveActor;
 let currentlyActiveActor;
@@ -537,7 +538,16 @@ async function updateTray() {
         event.preventDefault();
         const itemUuid = event.currentTarget.closest(".item").dataset.itemUuid;
         const item = fromUuid(itemUuid);
-        if ( item ) item.use({}, event);
+        if ( item ) { 
+            if (item.hasMacro() && settings.value("defaultmacro"))
+            {
+                item.executeMacro({}, event); 
+            }
+            else
+            {
+                item.use({}, event);
+            }
+        }
         return false;
     }
 
